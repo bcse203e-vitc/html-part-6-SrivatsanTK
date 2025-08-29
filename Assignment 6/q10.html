@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dynamic Form Builder</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  label {
+    display: block;
+    margin-top: 10px;
+  }
+  input {
+    padding: 6px;
+    margin-top: 4px;
+    width: 250px;
+  }
+  select, button {
+    padding: 6px 12px;
+    margin-right: 10px;
+  }
+  .error {
+    border: 2px solid red;
+  }
+  .error-message {
+    color: red;
+    font-size: 0.9em;
+    margin: 2px 0 8px 0;
+  }
+  .input-container {
+    margin-bottom: 12px;
+  }
+</style>
+</head>
+<body>
+
+<h2>Dynamic Form Builder</h2>
+
+<div>
+  <label for="inputType">Select input type:</label>
+  <select id="inputType">
+    <option value="text">Text</option>
+    <option value="email">Email</option>
+    <option value="password">Password</option>
+  </select>
+  <button id="addInputBtn">Add</button>
+</div>
+
+<form id="dynamicForm" novalidate>
+</form>
+
+<button id="submitBtn" style="margin-top: 15px;">Submit Form</button>
+
+<script>
+  const inputTypeSelect = document.getElementById('inputType');
+  const addInputBtn = document.getElementById('addInputBtn');
+  const dynamicForm = document.getElementById('dynamicForm');
+  const submitBtn = document.getElementById('submitBtn');
+
+  let inputCount = 0;
+
+ 
+  const patterns = {
+    text: /^.{1,}$/, 
+    email: /^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
+    password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/ 
+  };
+
+  addInputBtn.addEventListener('click', () => {
+    const selectedType = inputTypeSelect.value;
+    inputCount++;
+
+    const container = document.createElement('div');
+    container.classList.add('input-container');
+
+    const label = document.createElement('label');
+    label.htmlFor = `input${inputCount}`;
+    label.innerText = `${selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} Input #${inputCount}`;
+
+    const input = document.createElement('input');
+    input.type = selectedType;
+    input.id = `input${inputCount}`;
+    input.name = `input${inputCount}`;
+    input.dataset.type = selectedType;
+    input.placeholder = `Enter ${selectedType}`;
+
+    const errorMsg = document.createElement('div');
+    errorMsg.classList.add('error-message');
+    errorMsg.style.display = 'none';
+    errorMsg.innerText = 'Invalid input';
+
+    container.appendChild(label);
+    container.appendChild(input);
+    container.appendChild(errorMsg);
+    dynamicForm.appendChild(container);
+  });
+
+  function validateInput(input) {
+    const type = input.dataset.type;
+    const val = input.value.trim();
+    const regex = patterns[type];
+    return regex.test(val);
+  }
+
+  function clearErrors() {
+    const inputs = dynamicForm.querySelectorAll('input');
+    inputs.forEach(input => {
+      input.classList.remove('error');
+      const err = input.nextElementSibling;
+      if (err) err.style.display = 'none';
+    });
+  }
+
+  submitBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    clearErrors();
+
+    let isFormValid = true;
+    const inputs = dynamicForm.querySelectorAll('input');
+
+    if (inputs.length === 0) {
+      alert('Please add at least one input field.');
+      return;
+    }
+
+    inputs.forEach(input => {
+      if (!validateInput(input)) {
+        isFormValid = false;
+        input.classList.add('error');
+        const errorDiv = input.nextElementSibling;
+        if (errorDiv) {
+          if (input.dataset.type === 'text') {
+            errorDiv.innerText = 'Please enter some text.';
+          } else if (input.dataset.type === 'email') {
+            errorDiv.innerText = 'Please enter a valid email.';
+          } else if (input.dataset.type === 'password') {
+            errorDiv.innerText = 'Password must be at least 6 characters, with letters and numbers.';
+          }
+          errorDiv.style.display = 'block';
+        }
+      }
+    });
+
+    if (isFormValid) {
+      alert('Form submitted successfully!');
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dynamic Hobbies Form with Submit</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  .hobby-field {
+    margin-bottom: 15px;
+  }
+  input {
+    padding: 8px;
+    width: 300px;
+    box-sizing: border-box;
+  }
+  .error {
+    color: red;
+    font-size: 0.9em;
+    height: 1.2em;
+    margin-top: 3px;
+  }
+  button {
+    padding: 8px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h2>Hobbies Form</h2>
+
+<form id="hobbyForm" novalidate>
+  <div id="hobbiesContainer">
+    <div class="hobby-field">
+      <input type="text" name="hobby" placeholder="Enter hobby" />
+      <div class="error"></div>
+    </div>
+  </div>
+  <button type="button" id="addHobbyBtn">Add Hobby</button>
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+  const hobbiesContainer = document.getElementById('hobbiesContainer');
+  const addHobbyBtn = document.getElementById('addHobbyBtn');
+  const hobbyForm = document.getElementById('hobbyForm');
+
+  const hobbyRegex = /^[A-Za-z\s]+$/;
+
+  function validateHobby(input, errorDiv) {
+    const value = input.value.trim();
+
+    if (value === '') {
+      errorDiv.textContent = 'Hobby cannot be empty.';
+      return false;
+    }
+
+    if (!hobbyRegex.test(value)) {
+      errorDiv.textContent = 'Only alphabets and spaces are allowed.';
+      return false;
+    }
+
+    errorDiv.textContent = '';
+    return true;
+  }
+
+  function addValidationListener(input, errorDiv) {
+    input.addEventListener('input', () => {
+      validateHobby(input, errorDiv);
+    });
+  }
+
+  function addHobbyField() {
+    const hobbyFieldDiv = document.createElement('div');
+    hobbyFieldDiv.className = 'hobby-field';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'hobby';
+    input.placeholder = 'Enter hobby';
+
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error';
+
+    hobbyFieldDiv.appendChild(input);
+    hobbyFieldDiv.appendChild(errorDiv);
+    hobbiesContainer.appendChild(hobbyFieldDiv);
+
+    addValidationListener(input, errorDiv);
+  }
+
+  const firstInput = hobbiesContainer.querySelector('input[name="hobby"]');
+  const firstErrorDiv = hobbiesContainer.querySelector('.error');
+  addValidationListener(firstInput, firstErrorDiv);
+
+  addHobbyBtn.addEventListener('click', addHobbyField);
+
+  hobbyForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const hobbyFields = hobbiesContainer.querySelectorAll('.hobby-field');
+    let allValid = true;
+
+    hobbyFields.forEach(field => {
+      const input = field.querySelector('input');
+      const errorDiv = field.querySelector('.error');
+      const valid = validateHobby(input, errorDiv);
+      if (!valid) allValid = false;
+    });
+
+    if (allValid) {
+      const hobbies = Array.from(hobbyFields).map(f => f.querySelector('input').value.trim());
+      alert('Form submitted successfully!\nYour hobbies: ' + hobbies.join(', '));
+      hobbyForm.reset();
+
+      hobbyFields.forEach(field => {
+        field.querySelector('.error').textContent = '';
+      });
+    } else {
+      alert('Please fix errors before submitting.');
+    }
+  });
+</script>
+
+</body>
+</html>

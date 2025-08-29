@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Username Validation</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  input {
+    padding: 8px;
+    width: 300px;
+    box-sizing: border-box;
+  }
+  .error {
+    color: red;
+    font-size: 0.9em;
+    height: 1.2em;
+    margin-top: 5px;
+  }
+  button {
+    margin-top: 15px;
+    padding: 8px 15px;
+    font-size: 1em;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<h2>Username Validation Form</h2>
+
+<form id="usernameForm" novalidate>
+  <label for="username">Username:</label>
+  <input type="text" id="username" name="username" placeholder="3-16 chars: letters, numbers, underscore" />
+  <div id="usernameError" class="error"></div>
+
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+  const form = document.getElementById('usernameForm');
+  const usernameInput = document.getElementById('username');
+  const usernameError = document.getElementById('usernameError');
+
+  const usernameRegex = /^[a-zA-Z0-9_]{3,16}$/;
+
+  function validateUsername() {
+    const username = usernameInput.value.trim();
+
+    if (username === '') {
+      usernameError.textContent = 'Username is required.';
+      return false;
+    }
+
+    if (!usernameRegex.test(username)) {
+      usernameError.textContent = 'Username must be 3-16 characters and contain only letters, numbers, or underscores.';
+      return false;
+    }
+
+    usernameError.textContent = '';
+    return true;
+  }
+
+  usernameInput.addEventListener('input', validateUsername);
+
+  form.addEventListener('submit', (e) => {
+    if (!validateUsername()) {
+      e.preventDefault(); 
+      usernameInput.focus();
+    } else {
+      alert('Form submitted successfully with username: ' + usernameInput.value);
+      e.preventDefault(); 
+      form.reset();
+      usernameError.textContent = '';
+    }
+  });
+</script>
+
+</body>
+</html>

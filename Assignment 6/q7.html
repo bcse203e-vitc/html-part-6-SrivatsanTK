@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Date Format Validation</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  input {
+    padding: 8px;
+    width: 150px;
+    box-sizing: border-box;
+  }
+  .error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+  button {
+    margin-top: 15px;
+    padding: 8px 15px;
+    font-size: 1em;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<h2>Date Format Validation (DD/MM/YYYY)</h2>
+
+<form id="dateForm" novalidate>
+  <label for="date">Date:</label>
+  <input type="text" id="date" name="date" placeholder="DD/MM/YYYY" />
+  <div id="dateError" class="error"></div>
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+  const form = document.getElementById('dateForm');
+  const dateInput = document.getElementById('date');
+  const dateError = document.getElementById('dateError');
+
+  const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const dateValue = dateInput.value.trim();
+
+    if (!dateRegex.test(dateValue)) {
+      dateError.textContent = 'Date must be in DD/MM/YYYY format.';
+      dateInput.focus();
+    } else {
+      dateError.textContent = '';
+      alert('Date is valid: ' + dateValue);
+      form.reset();
+    }
+  });
+</script>
+
+</body>
+</html>

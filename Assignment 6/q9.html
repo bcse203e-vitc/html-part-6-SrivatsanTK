@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dynamic Country Dropdown</title>
+</head>
+<body>
+  <h2>Select Continent and Country</h2>
+  
+  <label for="continent">Continent:</label>
+  <select id="continent">
+    <option value="">-- Select Continent --</option>
+    <option value="asia">Asia</option>
+    <option value="europe">Europe</option>
+    <option value="africa">Africa</option>
+    <option value="north-america">North America</option>
+    <option value="south-america">South America</option>
+  </select>
+
+  <br /><br />
+
+  <label for="country">Country:</label>
+  <select id="country" disabled>
+    <option value="">-- Select Country --</option>
+  </select>
+
+  <script>
+    const continentCountryMap = {
+      "asia": ["China", "India", "Japan", "South Korea", "Indonesia"],
+      "europe": ["Germany", "France", "United Kingdom", "Italy", "Spain"],
+      "africa": ["Nigeria", "Egypt", "South Africa", "Kenya", "Ethiopia"],
+      "north-america": ["United States", "Canada", "Mexico", "Cuba", "Panama"],
+      "south-america": ["Brazil", "Argentina", "Colombia", "Chile", "Peru"]
+    };
+
+    const continentSelect = document.getElementById('continent');
+    const countrySelect = document.getElementById('country');
+
+    continentSelect.addEventListener('change', () => {
+      const selectedContinent = continentSelect.value;
+      
+      countrySelect.innerHTML = '<option value="">-- Select Country --</option>';
+      
+      if (selectedContinent && continentCountryMap[selectedContinent]) {
+        countrySelect.disabled = false;
+
+        continentCountryMap[selectedContinent].forEach(country => {
+          const option = document.createElement('option');
+          option.value = country.toLowerCase().replace(/\s+/g, '-');
+          option.textContent = country;
+          countrySelect.appendChild(option);
+        });
+      } else {
+        countrySelect.disabled = true;
+      }
+    });
+  </script>
+</body>
+</html>

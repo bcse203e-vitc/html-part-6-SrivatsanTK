@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dynamic Phone Number Validation</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  label {
+    font-weight: bold;
+  }
+  input {
+    padding: 8px;
+    width: 250px;
+    margin-top: 5px;
+    box-sizing: border-box;
+  }
+  .message {
+    margin-top: 5px;
+    font-size: 0.9em;
+    height: 1.2em;
+  }
+  .error {
+    color: red;
+  }
+  .success {
+    color: green;
+  }
+</style>
+</head>
+<body>
+
+<h2>Phone Number Validation</h2>
+
+<form id="phoneForm" novalidate>
+  <label for="phone">Phone Number:</label><br />
+  <input type="text" id="phone" name="phone" placeholder="(123) 456-7890 or 123-456-7890" />
+  <div id="message" class="message"></div>
+</form>
+
+<script>
+  const phoneInput = document.getElementById('phone');
+  const messageDiv = document.getElementById('message');
+
+  const phoneRegex = /^(\(\d{3}\)\s|\d{3}-)\d{3}-\d{4}$/;
+
+  phoneInput.addEventListener('input', () => {
+    const phone = phoneInput.value.trim();
+
+    if (phone === '') {
+      messageDiv.textContent = '';
+      messageDiv.className = 'message';
+      return;
+    }
+
+    if (phoneRegex.test(phone)) {
+      messageDiv.textContent = 'Valid phone number!';
+      messageDiv.className = 'message success';
+    } else {
+      messageDiv.textContent = 'Invalid phone number format.';
+      messageDiv.className = 'message error';
+    }
+  });
+</script>
+
+</body>
+</html>
